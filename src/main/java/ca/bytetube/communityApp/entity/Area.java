@@ -9,7 +9,7 @@ public class Area {
 
     private String areaName;
 
-    // The higher, the more front to display;
+    // The higher priority, the more front to display;
     private Integer priority;
 
     private Date createTime;
