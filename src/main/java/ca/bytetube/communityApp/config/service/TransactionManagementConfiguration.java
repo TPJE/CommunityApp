@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.TransactionManagementConfigurer;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 
@@ -18,7 +18,7 @@ import javax.sql.DataSource;
 // Enable transaction support by using the annotation @EnableTransactionManagement
 // Just add the annotation @Transactional to the Service method
 @EnableTransactionManagement
-public class TransctionManagementConfiguration implements TransactionManagementConfigurer {
+public class TransactionManagementConfiguration implements TransactionManagementConfigurer {
 
     @Autowired
     // Inject the dataSource in DataSourceConfiguration and get it through craeteDataSource()
@@ -28,8 +28,7 @@ public class TransctionManagementConfiguration implements TransactionManagementC
     /**
      * Return the implementation of PlatformTransactionManager in order to do transaction management
      */
-    public PlatformTransactionManager annotationDrivenTranscationManager() {
+    public PlatformTransactionManager annotationDrivenTransactionManager() {
         return new DataSourceTransactionManager(dataSource);
     }
-
 }

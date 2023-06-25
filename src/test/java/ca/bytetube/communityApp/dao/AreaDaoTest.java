@@ -1,7 +1,6 @@
-package ca.bytetube.community.dao;
+package ca.bytetube.communityApp.dao;
 
-import ca.bytetube.community.BaseTest;
-import ca.bytetube.communityApp.dao.AreaDao;
+import ca.bytetube.communityApp.CommunityappApplicationTests;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -9,7 +8,7 @@ import java.awt.geom.Area;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-public class AreaDaoTest extends BaseTest {
+public class AreaDaoTest extends CommunityappApplicationTests {
     @Autowired
     private AreaDao areaDao;
 
