@@ -14,6 +14,9 @@ public class ProductImg {
 
     private Date createTime;
 
+    // To indicate which product
+    private Long productId;
+
     public Long getProductImgId() {
         return productImgId;
     }
@@ -52,5 +55,13 @@ public class ProductImg {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 }

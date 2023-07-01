@@ -23,7 +23,7 @@ public class ImageUtil {
     private static Logger logger = LoggerFactory.getLogger(ImageUtil.class);
 
     /**
-     * Handle img and return reference path of new img
+     * Handle thumbnail and return reference path of new thumbnail
      * @param thumbnail
      * @param targetAddr
      * @return
@@ -58,6 +58,45 @@ public class ImageUtil {
     }
 
     /**
+     * Handle images and return reference path of new images
+     * @param thumbnail
+     * @param targetAddr
+     * @return
+     */
+
+    public static String generateNormalImg(ImageHolder thumbnail, String targetAddr) {
+        // Get unique random file name
+        String realFileName = getRandomFileName();
+
+        // Get file extension name like .png, .jpg
+        String extension = getFileExtension(thumbnail.getImageName());
+
+        // Create a directory path if not exist
+        makeDirPath(targetAddr);
+
+        // Get reference path with file name
+        String relativeAddr = targetAddr + realFileName + extension;
+        logger.debug("current relative path is: " + relativeAddr);
+
+        // Get target path
+        File dest = new File(PathUtil.getImgBasePath() + relativeAddr);
+        logger.debug("Current complete path is: " + PathUtil.getImgBasePath() + relativeAddr);
+
+        // Call Thumbnails to generate new img with watermark
+        try {
+            Thumbnails.of(thumbnail.getImage()).size(337, 640)
+                    .watermark(Positions.BOTTOM_RIGHT, ImageIO.read(new File(basePath + "/watermark.jpg")), 0.25f)
+                    .outputQuality(0.9f).toFile(dest);
+        } catch (IOException e) {
+            logger.error("Generate failed cause by: " + e.toString());
+            throw new RuntimeException("Generate failed cause by: " + e.toString());
+        }
+
+        // Return the reference path of image
+        return relativeAddr;
+    }
+
+    /**
      * Create random file name, use current yyyyMMddHHmmss + 5 random numbers
      *
      * @return
@@ -87,5 +126,22 @@ public class ImageUtil {
      */
     private static void makeDirPath(String targetAddr){
         String realFileParentPath = PathUtil.getImgBasePath() + targetAddr;
+    }
+
+    /**
+     * DELETE the file if storePath is a file,
+     * DELETE ALL files if storePath is a directory.
+     */
+    public static void deleteFileOrPath(String storePath){
+        File fileOrPath = new File(PathUtil.getImgBasePath() + storePath);
+        if(fileOrPath.exists()) {
+            if(fileOrPath.isDirectory()) {
+                File[] files = fileOrPath.listFiles();
+                for(int i = 0; i < files.length; i++) {
+                    files[i].delete();
+                }
+            }
+            fileOrPath.delete();
+        }
     }
 }
