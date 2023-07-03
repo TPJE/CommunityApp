@@ -57,7 +57,7 @@ public class PersonInfoServiceImpl implements PersonInfoService {
             return new PersonInfoExecution(PersonInfoStateEnum.SUCCESS, personInfo);
         } catch (Exception e) {
             logger.error("Update PersonInfo Error: " + e.getMessage());
-            return new PersonInfoOperationException("Update PersonInfo Error: " + e.getMessage())
+            throw new PersonInfoOperationException("Update PersonInfo Error: " + e.getMessage());
         }
     }
 }

@@ -1,13 +1,11 @@
 package ca.bytetube.communityApp.util.wechat;
 
-import ca.bytetube.communityApp.dto.PersonInfoExecution;
 import ca.bytetube.communityApp.dto.UserAccessToken;
 import ca.bytetube.communityApp.dto.WechatUser;
 import ca.bytetube.communityApp.entity.PersonInfo;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jdk.internal.util.xml.impl.Input;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +40,7 @@ public class WechatUtil {
         String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=?" + appId + "&secret=" + appSecret + "&code=" + code + "&grant_type=authorization_code";
 
         // Send token json request to relevant url
-        String tokenStr = httpesRequest(url, "GET", null);
+        String tokenStr = httpsRequest(url, "GET", null);
         logger.debug("userAccessToken: " + tokenStr);
         UserAccessToken token = new UserAccessToken();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -78,7 +76,7 @@ public class WechatUtil {
         String url = "https://api.weixin.qq.com/sns/userinfo?access_token=" + accessToken + "&openid=" + openId + "&lang=zh_CN";
 
         // Get user info Json and String by visit the url
-        String userStr = httpsRequst(url, "GET", null);
+        String userStr = httpsRequest(url, "GET", null);
         logger.debug("User info: " + userStr);
         WechatUser user = new WechatUser();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -122,7 +120,7 @@ public class WechatUtil {
      * HttpsRequest method
      */
 
-    public static String httpsRequst(String requestUrl, String requstMethod, String outputStr) {
+    public static String httpsRequest(String requestUrl, String requstMethod, String outputStr) {
         StringBuffer buffer = new StringBuffer();
 
         try {
