@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 
 public class WechatUser implements Serializable {
-    private static final long serialVersionUID = =4684067645282292327L;
+    private static final long serialVersionUID = -4684067645282292327L;
 
     // Unique id in the platform
     @JsonProperty("openid")

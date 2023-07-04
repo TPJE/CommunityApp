@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ca.bytetube.communityApp.dao.PersonInfoDao">
+    <!--    GET PersonInfo List-->
+    <select id="queryPersonInfoList" resultType="ca.bytetube.communityApp.entity.PersonInfo">
+        SELECT
+        user_id, name, gender, email, profile_img, user_type, create_time, last_edit_time, enable_status
+        FROM
+        tb_person_info
+        <where>
+            <!--
+            While using LIKE syntax we usually do LIKE '%#{parameter}%',
+            in mybatis we do '%${parameter}%', NOT '%#{parameter}%',
+            #{} -> ${}
+            -->
+            <if test="personInfoCondition != null AND personInfoCondition.name != null">
+                AND name LIKE '%${personInfoCondition.name}%'
+            </if>
+            <if test="personInfoCondition != null AND personInfoCondition.enableStatus != null">
+                AND enable_status = #{personInfoCondition.enableStatus}
+            </if>
+        </where>
+        ORDER BY
+        create_time DESC
+        <!--Paging the result for performance-->
+        LIMIT #{rowIndex}, #{pageSize};
+    </select>
+    <!--GET result count-->
+    <select id="queryPersonInfoCount" resultType="int">
+        SELECT
+        count(1)
+        FROM tb_person_info
+        <where>
+            <if test="personInfoCondition != null AND personInfoCondition.name != null">
+                AND name like '%${personInfoCondition.name}%'
+            </if>
+            <if test="personInfoCondition != null AND personInfoCondition.enableStatus != null">
+                AND enable_status = #{personInfoCondition.enableStatus}
+            </if>
+        </where>
+    </select>
+    <!--    GET PersonInfo BY ID-->
+    <select id="queryPersonInfoById" resultType="ca.bytetube.communityApp.entity.PersonInfo" parameterType="Long">
+        SELECT
+        user_id, name, gender, email, profile_img, user_type, create_time, last_edit_time, enable_status
+        FROM
+        tb_person_info
+        WHERE
+        user_id = #{userId}
+    </select>
+    <!--    INSERT PersonInfo-->
+    <insert id="insertPersonInfo" parameterType="ca.bytetube.communityApp.entity.PersonInfo" useGeneratedKeys="true"
+            keyProperty="userId" keyColumn="user_id">
+        INSERT INTO
+        tb_person_info (name, gender, email, profile_img, user_type, create_time, last_edit_time, enable_status)
+        VALUES
+        (#{name}, #{gender}, #{email}, #{profileImg}, #{userType}, #{createTime}, #{lastEditTime}, #{enableStatus})
+    </insert>
+    <!--    UPDATE PersonInfo-->
+    <update id="updatePersonInfo" parameterType="ca.bytetube.communityApp.entity.PersonInfo">
+        UPDATE
+        tb_person_info
+        <set>
+            <if test="name != null">name=#{name},</if>
+            <if test="gender != null">gender=#{gender},</if>
+            <if test="email != null">email=#{email},</if>
+            <if test="profileImg != null">profile_img=#{profileImg},</if>
+            <if test="userType != null">user_type=#{userType},</if>
+            <if test="lastEditTime != null">last_edit_time=#{lastEditTime},</if>
+            <if test="enableStatus != null">enable_status=#{enableStatus}</if>
+        </set>
+        WHERE
+        user_id = #{userId}
+    </update>
+</mapper>
