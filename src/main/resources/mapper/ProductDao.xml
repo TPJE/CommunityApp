@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ca.bytetube.communityApp.dao.ProductDao">
+    <resultMap id="productMap" type="ca.bytetube.communityApp.entity.Product">
+        <id column="product_id" property="productId"/>
+        <result column="product_name" property="productName"/>
+        <result column="product_desc" property="productDesc"/>
+        <result column="img_addr" property="imgAddr"/>
+        <result column="normal_price" property="normalPrice"/>
+        <result column="promotion_price" property="promotionPrice"/>
+        <result column="priority" property="priority"/>
+        <result column="create_time" property="createTime"/>
+        <result column="last_edit_time" property="lastEditTime"/>
+        <result column="enable_status" property="enableStatus"/>
+        <result column="point" property="point"/>
+        <association property="productCategory" column="product_category_id" javaType="ca.bytetube.communityApp.entity.ProductCategory">
+            <id column="product_category_id" property="productCategoryId"/>
+            <result column="product_category_name" property="productCategoryName"/>
+        </association>
+        <association property="shop" column="shopId" javaType="ca.bytetube.communityApp.entity.Shop">
+            <id column="shop_id" property="shopId"/>
+            <result column="owner_id" property="ownerId"/>
+            <result column="shop_name" property="shopName"/>
+        </association>
+        <collection property="productImgList" column="product_id" ofType="ca.bytetube.communityApp.entity.ProductImg">
+            <id column="product_img_id" property="productImgId"/>
+            <result column="detail_img" property="detailImg"/>
+            <result column="img_desc" property="imgDesc"/>
+            <result column="priority" property="priority"/>
+            <result column="create_time" property="createTime"/>
+            <result column="product_id" property="productId"/>
+        </collection>
+    </resultMap>
+<!--    GET Product List-->
+    <select id="queryProductList" resultMap="ca.bytetube.communityApp.entity.Product">
+        SELECT
+        product_id, product_name, product_desc, img_addr, normal_price, promotion_price, priority, create_time, last_edit_time, enable_status,
+        point, product_category_id, shop_id
+        FROM
+        tb_product
+        <where>
+            <if test="productCondition.shop != null AND productCondition.shop.shopId != unll">
+                AND shop_id = #{productCondition.shop.shopId}
+            </if>
+            <if test="productCondition.productCategory != null AND productCondition.productCategory.productCategoryId != null">
+                AND product_category_id = #{productCondition.productCategory.productCategoryId}
+            </if>
+            <if test="productCondition.productName != null">
+                AND product_name LIKE '%${productCondition.productName}%'
+            </if>
+            <if test="productCondition.enableStatus != null">
+                AND enable_status = #{productCondition.enableStatus}
+            </if>
+        </where>
+        ORDER BY
+        priority DESC
+        LIMIT #{rowIndex}, #{pageSize}
+    </select>
+<!--    GET Product Count-->
+    <select id="queryProductCount" resultMap="int">
+        SELECT
+        count(1)
+        FROM
+        tb_product
+        <where>
+            <if test="productCondition.shop != null AND productCondition.shop.shopId != null">
+                AND shop_id = #{productCondition.shop.shopId}
+            </if>
+            <if test="productCondition.productCategory != null AND productCondition.productCategory.productCategoryId != null">
+                ADN product_category_id = #{productCondition.productCategory.productCategoryId}
+            </if>
+            <if test="productCondition.productName != null">
+                AND product_name LIKE '%${productCondition.productName}%'
+            </if>
+            <if test="productCondition.enableStatus != null">
+                AND enable_status = #{productCondition.enableStatus}
+            </if>
+        </where>
+    </select>
+<!--    GET Shop by ShopId-->
+    <select id="queryByShopId" resultMap="shopMap" parameterType="Long">
+        SELECT
+        s.shop_id, s.shop_name, s.shop_desc, s.shop_addr, s.phone, s.shop_img, s.priority, s.create_time, s.last_edit_time, s.enable_status,
+        s.advice,
+        a.area_id, a.area_name,
+        sc.shop_category_id, sc.shop_category_name
+        FROM
+        tb_shop s,
+        tb_area a,
+        tb_shop_category sc
+        WHERE
+        s.area_id = a.area_id
+        AND
+        s.shop_category_id = sc.shop_category_id
+        AND
+        s.shop_id = #{shopId}
+    </select>
+<!--    INSERT Shop-->
+    <insert id="insertShop" useGeneratedKeys="true" keyColumn="shop_id" keyProperty="shopId">
+        INSERT INTO
+        tb_shop(owner_id, area_id, shop_category_id, shop_name, shop_desc, shop_addr, shop_img, phone, priority, create_time, last_edit_time, enable_status, advice)
+        VALUES
+        (#{owner.userId}, #{area.areaId}, #{shopCategory.shopCategoryId}, #{shopName}, #{shopDesc}, #{shopAddr}, #{shopImg}, #{phone}, #{priority}, #{createTime}, #{lastEditTime}, #{enableStatus}, #{advice})
+    </insert>
+<!--    UPDATE Shop-->
+    <update id="updateShop" parameterType="ca.bytetube.communityApp.entity.Shop">
+        UPDATE tb_shop
+        <set>
+            <if test="shopName != null">shop_name = #{shopName},</if>
+            <if test="shopDesc != null">shop_desc = #{shopDesc},</if>
+            <if test="shopAddr != null">shop_addr = #{shopAddr},</if>
+            <if test="shopImg != null">shop_img = #{shopImg},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="priority != null"> priority = #{priority}</if>
+            <if test="lastEditTime != null">last_edit_time = #{lastEditTime}</if>
+            <if test="enableStatus != null">enable_status = #{enableStatus}</if>
+            <if test="advice != null">advice = #{advice}</if>
+            <if test="area != null">area_id = #{area.area_id}</if>
+            <if test="shopCategory != null">shop_category_id = #{shopCategory.shopCategoryId}</if>
+        </set>
+        WHERE shop_id = #{shopId}
+    </update>
+</mapper>
