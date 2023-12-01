@@ -1,7 +1,6 @@
 package ca.bytetube.communityApp.entity;
 
 import java.util.Date;
-import java.util.List;
 
 public class Area {
     // Why do we use wrapper type instead of primitive type? Primitive data type has default value which may effect the result.

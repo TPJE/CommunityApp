@@ -1,6 +1,7 @@
 package ca.bytetube.communityApp.dao;
 
-import java.awt.geom.Area;
+import ca.bytetube.communityApp.entity.Area;
+
 import java.util.List;
 
 public interface AreaDao {

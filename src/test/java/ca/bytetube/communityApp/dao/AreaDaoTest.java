@@ -1,10 +1,10 @@
 package ca.bytetube.communityApp.dao;
 
 import ca.bytetube.communityApp.CommunityappApplicationTests;
+import ca.bytetube.communityApp.entity.Area;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.awt.geom.Area;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
